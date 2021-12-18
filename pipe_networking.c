@@ -1,15 +1,15 @@
 #include "pipe_networking.h"
 
+// creates the WKP and opens it, waiting for a connection
+// removes WKP after connection
+// returns file descriptor for upstream
 int server_setup(){
-  int b, from_client;
+  int b;
+  int from_client;
   char buffer[HANDSHAKE_BUFFER_SIZE];
   
   printf("making wkp...\n");
   b = mkfifo(WKP, 0600);
-  if(b == -1){
-    printf("error: %s/n", strerror(errno));
-    exit(-1);
-  }
   from_client = open(WKP, O_RDONLY, 0);
   remove(WKP);
   
@@ -17,6 +17,8 @@ int server_setup(){
   return from_client;
 }
 
+// subserver part of 3 way handshake
+// returns file descriptor for downstream
 int server_connect(int from_client){
   int to_client = 0, b;
   char buffer[HANDSHAKE_BUFFER_SIZE];

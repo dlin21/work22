@@ -31,7 +31,7 @@ int server_connect(int from_client){
   srand(time(NULL));
   int r = rand() % HANDSHAKE_BUFFER_SIZE;
   sprintf(buffer, "%d", r);
-  write(to_client; buffer, sizeof(buffer));
+  write(to_client, buffer, sizeof(buffer));
   read(from_client, buffer, sizeof(buffer));
   
   int ra = atoi(buffer);

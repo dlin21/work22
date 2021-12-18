@@ -1,5 +1,46 @@
 #include "pipe_networking.h"
 
+int server_setup(){
+  int b, from_client;
+  char buffer[HANDSHAKE_BUFFER_SIZE];
+  
+  printf("making wkp...\n");
+  b = mkfifo(WKP, 0600);
+  if(b == -1){
+    printf("error: %s/n", strerror(errno));
+    exit(-1);
+  }
+  from_client = open(WKP, O_RDONLY, 0);
+  remove(WKP);
+  
+  printf("removed wkp...\n");
+  return from_client;
+}
+
+int server_connect(int from_client){
+  int to_client = 0, b;
+  char buffer[HANDSHAKE_BUFFER_SIZE];
+  
+  b = read(from_client, buffer, sizeof(buffer));
+  printf("message recieved...\n");
+  
+  to_client = open(buffer, O_WRONLY, 0);
+  
+  srand(time(NULL));
+  int r = rand() % HANDSHAKE_BUFFER_SIZE;
+  sprintf(buffer, "%d", r);
+  write(to_client; buffer, sizeof(buffer));
+  read(from_client, buffer, sizeof(buffer));
+  
+  int ra = atoi(buffer);
+  if(ra += r + 1){
+    printf("bad handshake.../n");
+    exit(0);
+  }
+  printf("handshake completed...\n");
+  return to_client;
+}
+
 
 /*=========================
   server_handshake
